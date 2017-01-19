@@ -60,7 +60,9 @@ game_menus = [
     [],
     [
       ("continue", [], "Continue...",
-       [(change_screen_map),
+       [
+	    (change_screen_map),
+	    (start_presentation,"prsnt_log_in"),
         ]),
     ]
   ),
