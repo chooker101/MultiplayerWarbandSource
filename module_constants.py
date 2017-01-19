@@ -953,8 +953,56 @@ troop_slots_reserved_for_relations_start        = 165 #this is based on id_troop
 slot_troop_relations_begin				= 0 #this creates an array for relations between troops
 											#Right now, lords start at 165 and run to around 290, including pretenders
 											
-											
-											
+																						
+################## MULTI CAMP SLOTS #################		
+sending_receiving_frequency			= 0.03 #Lower value = faster freq, but much more lag on server/client(pc lag, not internet lag)
+no_pause_mod_sensibility			= 0.01
+
+
+
+mpcamp_event_register				= 1
+mpcamp_event_log_in					= 2
+mpcamp_event_chat					= 3
+mpcamp_event_send_my_pos			= 4
+mpcamp_event_get_my_pos				= 5
+mpcamp_event_get_pos				= 6
+mpcamp_event_player_connect_disconnect = 7
+mpcamp_event_init_players			= 8
+mpcamp_event_ping					= 9
+mpcamp_event_get_inventory			= 10
+mpcamp_event_get_gold				= 11
+mpcamp_event_buy_item				= 12
+mpcamp_event_sell_item				= 13
+mpcamp_event_get_my_troops			= 14
+mpcamp_event_show_text				= 15
+
+
+ip_str								= 127#not used
+temp_str							= 126#not used
+
+
+mpcamp_slots_begin_minus_one		=199
+slot_to_send_1						=200
+slot_to_send_2						=201
+slot_to_send_3						=202
+slot_to_send_4						=203
+slot_to_send_5						=204
+slot_to_send_6						=205
+slot_to_send_7						=206
+slot_to_send_8						=207
+slot_to_send_9						=208
+slot_to_send_10						=209
+slot_nr_arg							=210
+slot_data_type						=211 #1 for int,2 for string
+slot_temp							=212
+slot_event_to_use					=213
+
+slot_mesh_item_id					=214
+#party slots
+slot_player_ping					=300
+
+########MULTI CAMP SLOTS END ###########################
+
 ########################################################
 ##  PLAYER SLOTS           #############################
 ########################################################

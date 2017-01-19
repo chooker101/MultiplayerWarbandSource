@@ -30,6 +30,7 @@ scripts = [
   # INPUT: none
   ("game_start",
    [
+	  (assign,"$log_in_forced",0),
       (faction_set_slot, "fac_player_supporters_faction", slot_faction_state, sfs_inactive),
       (assign, "$g_player_luck", 200),
       (assign, "$g_player_luck", 200),
@@ -50778,5 +50779,511 @@ scripts = [
     (cur_tableau_add_sun_light, pos8, 175,150,125),
     ]),
    #INVASION MODE END
-     
+   ("send_int_to_server",
+   [
+    (store_script_param,":event",1),
+    (store_script_param,":arg_nr",2),
+	
+	(val_add,":arg_nr",1),
+	
+	#choose a slot to save the data
+    (assign,":slot_no",slot_to_send_10),
+    (assign,":i",11),
+	(try_for_range,":k",1,":i"),
+		(troop_get_slot,":nr",":k",slot_nr_arg),
+		(eq,":nr",0),
+		(assign,":slot_no",mpcamp_slots_begin_minus_one),
+		(val_add,":slot_no",":k"),
+		(assign,":i",-1),
+		(assign,":trp_id",":k"),
+	(try_end),
+	#slot choosen
+	(troop_set_slot,":trp_id",slot_nr_arg,":arg_nr"),
+	(troop_set_slot,":trp_id",slot_data_type,1),#it is int
+	(troop_set_slot,1,":slot_no",":event"),
+	
+	
+	(store_add,":end",":arg_nr",2),
+	
+	(try_for_range,":k",3,":end"),
+		(store_script_param,":data",":k"),
+		(store_sub,":offset",":k",1),
+		(troop_set_slot,":offset",":slot_no",":data"),
+	(try_end),
+   ]),
+   
+   
+   
+   ("send_string_to_server",
+   [
+    (store_script_param,":event",1),
+    (store_script_param,":arg_nr",2),
+	
+	(val_add,":arg_nr",1),
+	
+	#choose a slot to save the data
+    (assign,":slot_no",slot_to_send_10),
+    (assign,":i",11),
+	(try_for_range,":k",1,":i"),
+		(troop_get_slot,":nr",":k",slot_nr_arg),
+		(eq,":nr",0),
+		(assign,":slot_no",mpcamp_slots_begin_minus_one),
+		(val_add,":slot_no",":k"),
+		(assign,":i",-1),
+		(assign,":trp_id",":k"),
+	(try_end),
+	#slot choosen
+	
+	(troop_set_slot,":trp_id",slot_nr_arg,":arg_nr"),
+	(troop_set_slot,":trp_id",slot_data_type,2),#it is string
+	(troop_set_slot,1,":slot_no",":event"),
+    
+	(assign,":i",96),#starting string reg
+	
+	#finding the starting string
+	(try_for_range,":str_reg",65,":i"),
+		(try_begin),
+			(str_is_empty, ":str_reg"),
+			(assign,":i",-1),
+		(try_end),
+	(try_end),
+	#starting string found
+	
+	(store_add,":end",":arg_nr",2),
+	(try_for_range,":k",3,":end"),
+		(store_script_param,":str",":k"),
+		(str_store_string_reg,":str_reg",":str"),
+		(store_sub,":offset",":k",1),
+		(troop_set_slot,":offset",":slot_no",":str_reg"),
+		(val_add,":str_reg",1),
+	(try_end),
+	
+   ]),
+   
+   
+   ("send_data",
+   [
+		(str_clear, s1),
+		(str_store_string,s1,"str_ip"),
+		
+		
+		(assign,":end_data",11),
+		(try_for_range,":data_slot",1,":end_data"),
+			(troop_get_slot,":number_of_args",":data_slot",slot_nr_arg),
+			(store_add,":slot_no",199,":data_slot"),#the slot that we will be reading from: 200 = slot 1, 201 = slot 2...
+			(assign,reg3,":data_slot"),
+			(try_begin),
+				(gt,":number_of_args",0),#if there is any data that needs to be send
+					(troop_get_slot,":data_type",":data_slot",slot_data_type),
+					(try_begin),
+						#if it is a int data type
+						(eq,":data_type",1),#int
+						(try_begin),
+							(troop_get_slot,reg1,1,":slot_no"),#get the event
+							(str_store_string,s1,"@{s1}&event{reg3}={reg1}"),
+							(assign,reg1,":number_of_args"),#get the number of args
+							(str_store_string,s1,"@{s1}&nrarg{reg3}={reg1}"),
+							(store_add,":end",":number_of_args",1),#increment the upper bound
+							(try_for_range,":data",2,":end"),#reading every int data from the slot
+								(troop_get_slot,reg1,":data",":slot_no"),
+								(assign,reg2,":data"),
+								(val_sub,reg2,1),
+								(str_store_string,s1,"@{s1}&arg{reg3}|{reg2}={reg1}"),
+							(try_end),
+							#deleting the data saved
+							# (try_for_range,":k",1,":end"),
+								# (troop_set_slot,":k",":slot_no",0),
+							# (try_end),
+							(troop_set_slot,":data_slot",slot_nr_arg,0),
+							(troop_set_slot,":data_slot",slot_data_type,0),
+							#data deleted
+						(try_end),
+					(else_try),
+						#if it is an string data type
+						(eq,":data_type",2),#string
+							(try_begin),
+								(troop_get_slot,reg1,1,":slot_no"),#get the event
+								(str_store_string,s1,"@{s1}&event{reg3}={reg1}"),
+								(assign,reg1,":number_of_args"),#get the number of args
+								(str_store_string,s1,"@{s1}&nrarg{reg3}={reg1}"),
+								(store_add,":end",":number_of_args",1),
+								
+								(try_for_range,":data",2,":end"),#reading every string data from the slot
+									(troop_get_slot,":str_id",":data",":slot_no"),
+									(str_store_string_reg,s2,":str_id"),#s2 because s1 stores the url
+									(assign,reg2,":data"),
+									(val_sub,reg2,1),
+									(str_store_string,s1,"@{s1}&arg{reg3}|{reg2}={s2}"),
+								(try_end),
+								
+								# clearing the data
+								# (try_for_range,":k",1,":end"),
+									# (troop_get_slot,":str_id",":k",":slot_no"),
+									# (str_clear, ":str_id"),
+									# (troop_set_slot,":k",":slot_no",0),
+								# (try_end),
+								(troop_set_slot,":data_slot",slot_nr_arg,0),
+								(troop_set_slot,":data_slot",slot_data_type,0),
+								# clearing done
+							(try_end),
+					(try_end),
+			(else_try),#this is for optimisation
+					(assign,":end_data",-1),
+			(try_end),
+		(try_end),
+		
+		(send_message_to_url, s1),
+   ]),
+
+  ("code",[
+   (store_script_param,":args",1),
+   # (store_script_param,":num_integers",2),##uncomment these if you want to use them
+   # (store_script_param,":num_strings",3),
+   
+   (set_fixed_point_multiplier, 1000),
+   
+   (troop_get_slot,":event",0,":args"),
+   
+    (try_begin),
+	 	(eq,":event",mpcamp_event_register),
+			(troop_get_slot,":state",1,":args"),
+			(try_begin),
+				(eq,":state",1),#succesfull register
+					(display_message,"@Account succesfully registered!",0xFFDE00),
+					(troop_get_slot,"$g_my_unique_id",2,":args"),
+					(change_screen_return, 0),
+			(else_try),
+				(eq,":state",0),#username already taken
+					(display_message,"@The username is already taken!",0xFF0000),
+					(jump_to_menu, "mnu_start_game_1"),
+			(else_try),
+				(eq,":state",4),#invalid characters
+					(display_message,"@Invalid character used! You can only use a-z, A-Z, 0-9 and the special characters _-[] .It must contains at least one letter! ",0xFF0000),
+					(jump_to_menu, "mnu_start_game_1"),
+			(try_end),
+			
+    (else_try),
+		(eq,":event",mpcamp_event_log_in),
+			(troop_get_slot,":state",1,":args"),
+			(try_begin),
+				(eq,":state",2),#succesfull log in
+					(troop_get_slot,"$g_my_unique_id",2,":args"),
+					(troop_get_slot,"$g_my_local_id",3,":args"),
+					(display_message,"@Succesfull log in!",0xFFDE00),
+					(troop_raise_skill,"trp_player",skl_inventory_management,10),
+					(try_begin),
+						(eq,"$log_in_forced",1),
+							(change_screen_return, 0),
+					(else_try),
+						(change_screen_map),
+					(try_end),
+			(else_try),
+				(eq,":state",1),#invalid username or password
+					(display_message,"@Invalid username or password!Try again!",0xFF0000),
+					(start_presentation,"prsnt_log_in"),
+			(else_try),
+				(eq,":state",3),#the server is full
+					(display_message,"@The server is full!",0xFF0000),
+			(else_try),
+				(eq,":state",0),#Force log in
+					(start_presentation,"prsnt_log_in"),
+			(else_try),
+				(eq,":state",4),#invalid characters
+					(display_message,"@Invalid character used! You can only use a-z, A-Z, 0-9 and the special characters _-[] .It must contains at least one letter! ",0xFF0000),
+					(start_presentation,"prsnt_log_in"),
+			(try_end),# line 50
+	(else_try),
+	
+		(eq,":event",mpcamp_event_chat),
+			(display_message,"@[{s2}]:{s1}"),
+	(else_try),
+	
+		(eq,":event",mpcamp_event_player_connect_disconnect),
+			(troop_get_slot,":state",1,":args"),
+			(troop_get_slot,":local_id",2,":args"),
+			(try_begin),
+				(eq,":state",1),#connect
+					(store_add,":party_id",":local_id","p_multiplayer_parties_begin"),
+					
+					(party_set_name, ":party_id", s1),
+					
+					(assign,reg1,":local_id"),
+					(display_message,"@{s1} just connected!",0xFFFF00),
+					(set_show_messages,0),
+					(display_log_message,"@{s1} with id {reg1} connected!"),
+					(set_show_messages,1),
+					(enable_party,":party_id"),
+			(else_try),
+				(store_add,":party_id",":local_id","p_multiplayer_parties_begin"),
+				(disable_party,":party_id"),
+				(display_message,"@{s1} just disconnected!",0xFF3333),
+				
+				(assign,reg1,":local_id"),
+				(set_show_messages,0),
+				(display_log_message,"@{s1} with id {reg1} disconnected!"),
+				(set_show_messages,1),
+				(party_set_name, ":party_id", "@Offline"),
+			(try_end),
+	(else_try),
+	
+		(eq,":event",mpcamp_event_init_players),
+		(assign,":c",1),
+		(assign,":str",0),
+			(try_for_range,":i",1,11),
+				(troop_get_slot,":x",":c",":args"),
+				(val_add,":c",1),
+				(troop_get_slot,":y",":c",":args"),
+				(val_add,":c",1),
+				(troop_get_slot,":rot",":c",":args"),
+				(val_add,":c",1),
+				(troop_get_slot,":active",":c",":args"),
+				(val_add,":c",1),
+				(store_add,":party_id",":i","p_multiplayer_parties_begin"),
+				(init_position,pos1),
+				(position_set_x,pos1,":x"),
+				(position_set_y,pos1,":y"),
+				(position_rotate_z,pos1,":rot"),
+				(val_add,":str",1),
+				
+				
+				(assign,reg1,":active"),
+				(assign,reg2,":i"),
+				(str_store_string_reg,s0,":str"),
+				
+				(party_set_name, ":party_id", s0),
+				
+				(set_show_messages,0),
+				(display_log_message,"@Initial player : {s0} - {reg2} | active {reg1}",),
+				(set_show_messages,1),
+				
+				
+				(neq,":i","$g_my_local_id"),
+				
+				(party_set_position,":party_id",pos1), #line 104
+				(try_begin),
+					(eq,":active",1),
+						(enable_party,":party_id"),
+				(else_try),
+					(disable_party,":party_id"),
+				(try_end),
+				
+				
+			(try_end),
+	(else_try),
+	
+		(eq,":event",mpcamp_event_get_pos),
+			(troop_get_slot,":nr_players",1,":args"),
+			(val_add,":nr_players",1),
+			(assign,":c",2),
+			(try_for_range,":i",1,":nr_players"),
+				(troop_get_slot,":local_id",":c",":args"),
+				(store_add,":party_id",":local_id","p_multiplayer_parties_begin"),
+				(val_add,":c",1),
+				(troop_get_slot,":x",":c",":args"),
+				(val_add,":c",1),
+				(troop_get_slot,":y",":c",":args"),
+				(val_add,":c",1),
+				(troop_get_slot,":rot",":c",":args"),
+				(val_add,":c",1),
+				
+				(init_position,pos2),
+				(position_set_x,pos2,":x"),
+				(position_set_y,pos2,":y"),
+				(position_rotate_z,pos2,":rot"),
+				
+				(party_get_position,pos1,":party_id"),
+				
+				(party_set_ai_initiative,":party_id",0),
+				
+				(get_distance_between_positions,":dist",pos1,pos2),
+				(try_begin),
+					(lt,":dist",300),
+						(party_set_ai_target_position,":party_id",pos2),
+						(party_set_ai_behavior, ":party_id", ai_bhvr_travel_to_point),
+						(party_set_ai_target_position,":party_id",pos2),
+				(else_try),
+						(party_set_position,":party_id",pos2),
+						(party_set_ai_initiative,":party_id",0),
+						(party_set_ai_behavior, ":party_id", ai_bhvr_hold),
+				(try_end),
+			(try_end),
+	(else_try),
+		(eq,":event",mpcamp_event_ping),
+			(troop_get_slot,":state",1,":args"),
+			(try_begin),
+				(eq,":state",1),
+					(call_script,"script_send_int_to_server",mpcamp_event_ping,1,1), #line 150
+			(else_try),
+				# (troop_get_slot,reg1,2,":args"),
+				(try_for_range,":i",0,10),
+					(store_add,":index",":i",2),
+					(troop_get_slot,":ping",":index",":args"),
+					
+					(store_add,":party_id",":i","p_multiplayer_1"),
+					
+					(party_set_slot,":party_id",slot_player_ping,":ping"),
+				(try_end),
+			(try_end),
+	(else_try),
+		(eq,":event",mpcamp_event_get_inventory),
+			(try_for_range,":i",0,91),
+				(troop_get_inventory_slot,":item","trp_player",":i"),
+				(neq,":item",-1),
+				(assign,":num_itm",0),
+				(try_begin),
+					(try_for_range,":j",0,91),
+						(troop_get_inventory_slot,":item_1","trp_player",":j"),
+						(eq,":item_1",":item"),
+						(val_add,":num_itm",1),
+					(try_end),
+					(try_for_range,":j",1,91),
+						(troop_get_slot,":item_1",":j",":args"),
+						(eq,":item_1",":item"),
+						(val_sub,":num_itm",1),
+					(try_end),
+					(neq,":num_itm",0),
+					(try_begin),
+						(gt,":num_itm",0),
+						(val_add,":num_itm",1),
+							(try_for_range,":j",1,":num_itm"),
+								(troop_remove_item,"trp_player",":item"),
+							(try_end),
+					(else_try),
+						(lt,":num_itm",0),
+						(val_mul,":num_itm",-1),
+						(val_add,":num_itm",1),
+							(try_for_range,":j",1,":num_itm"),
+								(troop_add_item,"trp_player",":item"),
+							(try_end),
+					(try_end),
+				(try_end),
+			(try_end),
+			
+			(try_for_range,":i",1,91),
+				(troop_get_slot,":item",":i",":args"),
+				(neq,":item",-1),
+				(assign,":num_itm",0),
+				(try_begin),
+					(try_for_range,":j",0,91),
+						(troop_get_inventory_slot,":item_1","trp_player",":j"),
+						(eq,":item_1",":item"),
+						(val_add,":num_itm",1),
+					(try_end),
+					(try_for_range,":j",1,91),
+						(troop_get_slot,":item_1",":j",":args"),
+						(eq,":item_1",":item"),
+						(val_sub,":num_itm",1),
+					(try_end),
+					(neq,":num_itm",0),
+					(try_begin),
+						(gt,":num_itm",0),
+						(val_add,":num_itm",1),
+							(try_for_range,":j",1,":num_itm"),
+								(troop_remove_item,"trp_player",":item"),
+							(try_end),
+					(else_try),
+						(lt,":num_itm",0),
+						(val_mul,":num_itm",-1),
+						(val_add,":num_itm",1),
+							(try_for_range,":j",1,":num_itm"),
+								(troop_add_item,"trp_player",":item"),
+							(try_end),
+					(try_end),
+				(try_end),
+			(try_end),
+	(else_try),
+		(eq,":event",mpcamp_event_get_gold),
+		
+			(store_troop_gold,":gold","trp_player"),
+			(troop_get_slot,":real_gold",1,":args"),
+			
+			(neq,":real_gold",":gold"),
+			(try_begin),
+				(gt,":real_gold",":gold"),
+					(store_sub,":gold_to_be_add",":real_gold",":gold"),
+					(troop_add_gold,"trp_player",":gold_to_be_add"),
+			(else_try),
+				(lt,":real_gold",":gold"),
+					(store_sub,":gold_to_be_remove",":gold",":real_gold"),
+					(troop_remove_gold,"trp_player",":gold_to_be_remove"),
+			(try_end),
+			
+	(else_try),
+		(eq,":event",mpcamp_event_get_my_pos),
+		
+		(troop_get_slot,":x",1,":args"),
+		(troop_get_slot,":y",2,":args"),
+		(troop_get_slot,":rot",3,":args"),
+		
+		
+		(init_position,pos2),
+		(position_set_x,pos2,":x"),
+		(position_set_y,pos2,":y"),
+		(position_rotate_z,pos2,":rot"),
+		
+		(party_set_position,"p_main_party",pos2),
+		
+	(else_try),
+		(eq,":event",mpcamp_event_show_text),
+			(troop_get_slot,":color",1,":args"),
+			(display_message,"str_s1",":color"),
+	# (else_try),
+		# (eq,":event",mpcamp_event_get_my_troops),
+		
+			# (troop_get_slot,":troops_nr",1,":args"),
+			# (party_count_members_of_type,":dest","p_main_party",<troop_id>),
+			
+			# (try_for_range,":i",2,":troops_nr"),
+				# (troop_get_slot,":troop_id",":i",":args"),
+				# (party_count_members_of_type,":dest","p_main_party",":troop_id"),
+			# (try_end),
+    (try_end),
+  ]),
+  
+  
+  ("inventory_overlay",
+  [
+	# (store_script_param,":slot",1),
+	(store_script_param,":x",2),
+	(store_script_param,":y",3),
+  
+	
+	(init_position,pos1),
+	
+	(create_image_button_overlay,":mesh_id", "mesh_inv_slot", "mesh_inv_slot"),
+	(val_sub,":x",43.5),
+	(val_sub,":y",43.5),
+	(position_set_x, pos1, ":x"),
+	(position_set_y, pos1, ":y"),
+	(overlay_set_position, ":mesh_id", pos1),
+	(position_set_x, pos1, 870),
+	(position_set_y, pos1, 870),
+	(overlay_set_size, ":mesh_id", pos1),
+  ]),
+  
+  
+  ("inventory_overlay_item_id",
+  [
+	(store_script_param,":slot",1),
+	(store_script_param,":x",2),
+	(store_script_param,":y",3),
+  
+	(troop_get_inventory_slot,":itm","trp_player",":slot"),
+	
+	(init_position,pos1),
+	(store_add,":mesh_id",":slot",2),
+	
+	(try_begin),
+		(neq,":itm",-1),
+		(create_mesh_overlay_with_item_id, ":obj", ":itm"),
+		(position_set_x, pos1, ":x"),
+		(position_set_y, pos1, ":y"),
+		(overlay_set_position, ":obj", pos1),
+		(troop_set_slot,":mesh_id",slot_mesh_item_id,":itm"),
+	(else_try),
+		(troop_set_slot,":mesh_id",slot_mesh_item_id,-1),
+	(try_end),
+  
+  ]),
+  
 ]

@@ -257,6 +257,7 @@ troops = [
 ####################################################################################################################
 # Troops before this point are hardwired into the game and their order should not be changed!
 ####################################################################################################################
+  ["player_m","multiplayer","multiplayer",tf_hero|tf_unmoveable_in_party_window, no_scene,reserved, fac_commoners,[itm_leather_jacket,itm_hide_boots],def_attrib|level(5),wp(20),knows_common,0x000000018000000136db6db6db6db6db00000000001db6db0000000000000000],
   ["find_item_cheat","find_item_cheat","find_item_cheat",tf_hero|tf_is_merchant,no_scene,reserved,fac_commoners,[],def_attrib,0,knows_common|knows_inventory_management_10,0],
   ["random_town_sequence","Random Town Sequence","Random Town Sequence",tf_hero,no_scene,reserved,fac_commoners,[],def_attrib,0,knows_common|knows_inventory_management_10,0],
   ["tournament_participants","Tournament Participants","Tournament Participants",tf_hero,no_scene,reserved,fac_commoners,[],def_attrib,0,knows_common|knows_inventory_management_10,0],

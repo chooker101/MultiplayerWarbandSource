@@ -4339,4 +4339,9 @@ We apologize sincerely if you contributed your suggestions and feedback but were
   ("npc16_1","-Good with throwing and 1h^-Poor with 2h and crossbows"),
   #INVASION MODE END
   
+  ######## MULTI CAMP STRINGS #########
+  ("s1","{s1}"),
+  ("username","Username:"),
+  ("password","Password:"),
+  ("ip","http://127.0.0.1/multiplayer.php?"),
 ]

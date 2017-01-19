@@ -544,14 +544,17 @@ mesh_mp_ui_host_maps_18 = 542
 mesh_mp_ui_host_maps_19 = 543
 mesh_mp_ui_host_maps_20 = 544
 mesh_mp_ui_host_maps_21 = 545
-mesh_incoming_enemy = 546
-mesh_prison_cart_pos = 547
-mesh_ccoop_drop_chest_top = 548
-mesh_ccoop_drop_chest_bottom = 549
-mesh_ccoop_random_class = 550
-mesh_ccoop_default_class = 551
-mesh_ccoop_melee_class = 552
-mesh_ccoop_ranged_class = 553
-mesh_ccoop_mounted_class = 554
+mesh_inventory_window = 546
+mesh_party_window = 547
+mesh_gold_mesh = 548
+mesh_incoming_enemy = 549
+mesh_prison_cart_pos = 550
+mesh_ccoop_drop_chest_top = 551
+mesh_ccoop_drop_chest_bottom = 552
+mesh_ccoop_random_class = 553
+mesh_ccoop_default_class = 554
+mesh_ccoop_melee_class = 555
+mesh_ccoop_ranged_class = 556
+mesh_ccoop_mounted_class = 557
 
 

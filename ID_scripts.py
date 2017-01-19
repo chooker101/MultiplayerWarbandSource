@@ -608,5 +608,11 @@ script_coop_drop_item = 606
 script_cf_coop_give_item_to_assigned_group_member = 607
 script_add_player_to_cur_tableau_for_coop = 608
 script_add_troop_to_cur_tableau_for_coop = 609
+script_send_int_to_server = 610
+script_send_string_to_server = 611
+script_send_data = 612
+script_code = 613
+script_inventory_overlay = 614
+script_inventory_overlay_item_id = 615
 
 

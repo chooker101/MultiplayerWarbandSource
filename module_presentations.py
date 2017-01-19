@@ -7,6 +7,8 @@ from header_triggers import *
 from module_constants import *
 import string
 
+from header_items import *
+
 ####################################################################################################################
 #  Each presentation record contains the following fields:
 #  1) Presentation id: used for referencing presentations in other files. The prefix prsnt_ is automatically added before each presentation id.
@@ -14,6 +16,22 @@ import string
 #  3) Presentation background mesh: See module_meshes.py for a list of available background meshes
 #  4) Triggers: Simple triggers that are associated with the presentation
 ####################################################################################################################
+
+sync = (ti_on_presentation_run,
+           [
+		    (store_trigger_param_1,":cur_miliseconds"),
+			(store_sub,":sub",":cur_miliseconds","$timee"),
+			(assign,reg1,":cur_miliseconds"),
+			(try_begin),
+				(ge,":sub",500),
+				(call_script,"script_send_data"),
+				(assign,"$timee",":cur_miliseconds"),
+			(else_try),
+				(lt,":sub",0),
+				(assign,"$timee",0),
+			(try_end),
+        ])
+
 
 presentations = [
   ("game_credits",prsntf_read_only,mesh_load_window,[
@@ -1743,6 +1761,7 @@ presentations = [
   ("game_multiplayer_admin_panel", prsntf_manual_end_only, 0, [
     (ti_on_presentation_load,
      [(set_fixed_point_multiplier, 1000),
+
 #INVASION MODE START
 #This code is necessary for presentation objects that are present in some modes but not others
 	  (assign, "$g_presentation_obj_admin_panel_1", -1),
@@ -1906,6 +1925,7 @@ presentations = [
         (eq, "$g_multiplayer_game_type", multiplayer_game_type_siege),
         (val_add, ":cur_y", ":cur_y_adder"), #one more option for these mods
       (try_end),
+
       #INVASION MODE start
 	  (try_begin),
 		(eq, "$g_multiplayer_is_game_type_captain", 1),
@@ -2131,6 +2151,17 @@ presentations = [
       (call_script, "script_multiplayer_fill_available_factions_combo_button", "$g_presentation_obj_admin_panel_11", "$g_multiplayer_next_team_1_faction", "$g_multiplayer_next_team_2_faction"),
 
       (val_sub, ":cur_y", ":cur_y_adder"),
+
+
+
+
+
+
+
+
+
+
+
       #INVASION MODE START
 	  (try_begin),
 		#(neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
@@ -2139,6 +2170,8 @@ presentations = [
 		(position_set_x, pos1, 0),
 		(position_set_y, pos1, ":cur_y"),
 		(overlay_set_position, reg0, pos1),
+
+
 
 		(create_combo_button_overlay, "$g_presentation_obj_admin_panel_12"),
 		(position_set_x, pos1, 800),
@@ -2180,10 +2213,25 @@ presentations = [
       (server_get_max_num_players, ":max_players"),
       (overlay_set_val, "$g_presentation_obj_admin_panel_21", ":max_players"),
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       #INVASION MODE START
 	  (try_begin),
 		(neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop), 
 		(val_sub, ":cur_y", ":cur_y_adder"),
+
         (assign, reg1, 1),
         (create_text_overlay, reg0, "str_number_of_bots_in_team_reg1", 0),
         (position_set_x, pos1, 0),
@@ -2203,6 +2251,7 @@ presentations = [
         (position_set_x, pos1, 0),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, reg0, pos1),
+
         
         (create_number_box_overlay, "$g_presentation_obj_admin_panel_4", 0, "$g_multiplayer_max_num_bots"),
         (position_set_x, pos1, 390),
@@ -2339,6 +2388,7 @@ presentations = [
 
       (try_begin),
         (neq, "$g_multiplayer_game_type", multiplayer_game_type_headquarters),
+
         #INVASION MODE START
         (neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
         #INVASION MODE END
@@ -2435,16 +2485,19 @@ presentations = [
       (else_try),
         (assign, "$g_presentation_obj_admin_panel_27", -1),
       (try_end),
+
       
       #INVASION MODE START
 	  (try_begin), # team point limit
 	    (neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
         (val_sub, ":cur_y", ":cur_y_adder"),
+
         
         (create_text_overlay, reg0, "str_team_points_limit", 0),
         (position_set_x, pos1, 0),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, reg0, pos1),
+
         
         (create_number_box_overlay, "$g_presentation_obj_admin_panel_8", 3, 1001),
         (position_set_x, pos1, 390),
@@ -2491,20 +2544,24 @@ presentations = [
       (else_try),
         (assign, "$g_presentation_obj_admin_panel_18", -1),
       (try_end),
+
       
       #INVASION MODE START
 	  (try_begin), #ccoop
 		(neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
 		(val_sub, ":cur_y", ":cur_y_adder"),
+
         (create_text_overlay, reg0, "str_respawn_period", 0),
         (position_set_x, pos1, 0),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, reg0, pos1),
+
         (create_number_box_overlay, "$g_presentation_obj_admin_panel_6", multiplayer_respawn_period_min, multiplayer_respawn_period_max),
         (position_set_x, pos1, 390),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, "$g_presentation_obj_admin_panel_6", pos1),
         (overlay_set_val, "$g_presentation_obj_admin_panel_6", "$g_multiplayer_respawn_period"),
+
       (try_end),
       #INVASION MODE END
       
@@ -2611,6 +2668,8 @@ presentations = [
       (overlay_set_position, "$g_presentation_obj_admin_panel_23", pos1),
       (overlay_set_val, "$g_presentation_obj_admin_panel_23", "$g_multiplayer_factions_voteable"),
 
+
+
       #INVASION MODE START
 	  (try_begin), #ccoop bot count limit for polls
 	    (neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
@@ -2620,6 +2679,7 @@ presentations = [
         (position_set_x, pos1, 0),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, reg0, pos1),
+
 	    
         (assign, ":upper_limit", 51),
         (val_min, ":upper_limit", "$g_multiplayer_max_num_bots"),
@@ -2643,6 +2703,12 @@ presentations = [
       (position_set_y, pos1, ":cur_y"),
       (overlay_set_position, "$g_presentation_obj_admin_panel_30", pos1),
       (overlay_set_val, "$g_presentation_obj_admin_panel_30", "$g_multiplayer_valid_vote_ratio"),
+
+
+
+
+
+
 
       #INVASION MODE START
 	  (try_begin), # auto team balance
@@ -3233,6 +3299,7 @@ presentations = [
         (try_begin),
 	      (neq, "$g_multiplayer_game_type", multiplayer_game_type_captain_coop),
           (overlay_set_position, "$g_presentation_obj_team_select_2", pos1),
+
           (val_sub, ":cur_y", escape_menu_item_height),
           (position_set_y, pos1, ":cur_y"),
         (try_end),
@@ -3551,6 +3618,7 @@ presentations = [
       (assign, "$g_presentation_obj_item_select_14", -1),
       (assign, "$g_presentation_obj_item_select_15", -1),
       (assign, "$g_presentation_obj_item_select_16", -1),
+
       #INVASION MODE START
       (assign, "$g_presentation_obj_item_select_17", -1),
       #INVASION MODE END
@@ -3780,14 +3848,19 @@ presentations = [
 	  (else_try),
 	    (neq, "$g_multiplayer_is_game_type_captain", 1),
         (eq, ":my_team_no", 0),
+
 	    (gt, "$g_multiplayer_num_bots_team_1", 0),
 	    (assign, ":has_bots", 1),
+
+
+
 	  (else_try),
 	    (neq, "$g_multiplayer_is_game_type_captain", 1),
         (eq, ":my_team_no", 1),
 	    (gt, "$g_multiplayer_num_bots_team_2", 0),
 	    (assign, ":has_bots", 1),
 	  (try_end),
+
       #INVASION MODE END
       (team_get_faction, ":my_faction_no", ":my_team_no"),
 
@@ -3816,6 +3889,47 @@ presentations = [
         (store_mul, ":board_height", ":num_lines", 20),
         (val_add, ":board_height", 40),
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         #INVASION MODE START
         (try_begin),
           (eq, "$g_multiplayer_is_game_type_captain", 1),
@@ -3835,14 +3949,33 @@ presentations = [
           (position_set_x, pos1, 2500),
           (position_set_y, pos1, 2500),
           (overlay_set_size, reg0, pos1),
+
+
           
           (create_mesh_overlay, reg0, "mesh_mp_ui_command_border_l"),
           (position_set_x, pos1, 650),
           (position_set_y, pos1, 680),
           (overlay_set_position, reg0, pos1),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           (position_set_x, pos1, 2500),
           (position_set_y, pos1, 2500),
           (overlay_set_size, reg0, pos1),
+
 
           (create_mesh_overlay, reg0, "mesh_mp_ui_command_panel"),
           (position_set_x, pos1, 350),
@@ -3862,6 +3995,7 @@ presentations = [
           (position_set_y, pos1, ":cur_y"),
           (overlay_set_position, reg0, pos1),
           (val_sub, ":cur_y", 20),
+
         (try_end),
         
         (assign, ":cur_ai_troop_index", 0),
@@ -4663,9 +4797,20 @@ presentations = [
               (store_add, ":player_slot_index", slot_player_selected_item_indices_begin, "$g_presentation_state"),
               (val_sub, ":player_slot_index", 1),
               (player_set_slot, ":my_player_no", ":player_slot_index", ":item_no"),
+
+
+
+
+
+
+
+
+
               (call_script, "script_multiplayer_update_cost_labels"),
               (assign, ":end_cond", 0), #break
             (try_end),
+
+
           (try_end),
           (presentation_set_duration, 0),
           (assign, "$g_presentation_state", 0),
@@ -7052,6 +7197,7 @@ presentations = [
       (assign, ":cur_y", ":y_needed"),
       (assign, ":cur_x", 42),
 
+
       #INVASION MODE START
 	  (try_begin),
 		# if captain coop mode
@@ -7355,6 +7501,7 @@ presentations = [
             (position_set_y, pos1, 1000),
             (overlay_set_size, reg0, pos1),
           (try_end),
+
 
           #INVASION MODE START
           (assign, ":font_color", 0xFFFFFF),
@@ -13070,21 +13217,928 @@ presentations = [
       ]),
     ]),
 
+########## MULTI CAMP PRESENTATIONS #################
+	##########CHAT###########
+	 ("chat_message",prsntf_manual_end_only, 0,[
+    (ti_on_presentation_load,
+       [	   
+		(set_fixed_point_multiplier, 1000),
+        (init_position, pos1),
+        (str_store_string, s1, "@Send to everybody:"),
+        (create_text_overlay, reg1, s1,tf_with_outline),
+		(overlay_set_color, reg1, 0xFFFF0000), 
+		
+        (position_set_x, pos1, 200),
+        (position_set_y, pos1, 530),
+        (overlay_set_position, reg1, pos1),
+        (overlay_set_text, reg1, s1),
+        (position_set_x, pos1, 1000),
+        (position_set_y, pos1, 1000),
+        (overlay_set_size, reg1, pos1),
+		
+        (create_simple_text_box_overlay, "$g_message", tf_center_justify),
+        (position_set_x, pos1, 200),
+        (position_set_y, pos1, 500),
+        (overlay_set_position, "$g_message", pos1),
+        (position_set_x, pos1, 600),
+        (position_set_y, pos1, 1000),
+        (overlay_set_size, "$g_message", pos1),
+		(overlay_obtain_focus, "$g_message"),
+      
+        (assign, "$g_waiting_to_sendMessage", 1),
+        (str_clear, s0),
+        (overlay_set_text, "$g_message", s0),
+        (assign,"$g_waiting_for_confirmation_to_terminate", 1),
+        (presentation_set_duration, 999999),
+      ]),
+
+      (ti_on_presentation_event_state_change,
+        [   (try_begin),
+                 (neq,"$g_waiting_to_sendMessage",1),
+				  (try_begin),
+					(neg|str_is_empty, s0),
+					(str_store_string_reg, s1, s0),
+					(call_script,"script_send_string_to_server",mpcamp_event_chat,1,s1),
+				  (try_end),
+                  (assign, "$g_waiting_for_confirmation_to_terminate", 0),
+                  (presentation_set_duration, 0),
+            (try_end),
+        ]),
+
+       (ti_on_presentation_run,
+           [
+		   
+           (try_begin),
+                 (key_clicked, key_escape),
+                 (assign, "$g_waiting_for_confirmation_to_terminate", 0),
+                 (presentation_set_duration, 0),
+                 (assign, "$g_waiting_to_sendMessage", 0),
+           (else_try),
+                  (key_clicked, key_enter),
+                  (assign, "$g_waiting_to_sendMessage", 0),
+           (try_end),
+        ]),
+		sync,
+		
+    ]),
+	
+	
+	##############REGISTER##################
+	  ("register",0,mesh_load_window,[
+      (ti_on_presentation_load,
+       [
+	   (set_fixed_point_multiplier, 1000),
+	   
+	   (str_store_string, s1, "@Register account!"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 600),
+        (overlay_set_position, reg1, pos1),
+	   
+        (str_store_string, s1, "str_username"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 500),
+        (overlay_set_position, reg1, pos1),
+        #(overlay_set_text, reg1, s1),
+        (create_simple_text_box_overlay, "$username"),
+        (position_set_x, pos1, 400),
+        (position_set_y, pos1, 475),
+        (overlay_set_position, "$username", pos1),
+       
+	   ###pass
+	   (str_store_string, s1, "str_password"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 400),
+        (overlay_set_position, reg1, pos1),
+        #(overlay_set_text, reg1, s1),
+        (create_simple_text_box_overlay, "$password"),
+        (position_set_x, pos1, 400),
+        (position_set_y, pos1, 375),
+        (overlay_set_position, "$password", pos1),  
+	   
+        
+        (create_button_overlay, "$obj2", "@Continue...", tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 250),
+        (overlay_set_position, "$obj2", pos1),
+		
+		 (create_button_overlay, "$obj3", "@Exit", tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 200),
+        (overlay_set_position, "$obj3", pos1),
+        (presentation_set_duration, 999999),
+        ]),
+		
+      (ti_on_presentation_event_state_change,
+       [(store_trigger_param_1, ":object"),
+        (try_begin),
+          (eq, ":object", "$username"),
+          (str_store_string, s1, s0),
+		(else_try),
+			(eq,":object","$password"),
+			(str_store_string, s2, s0),
+        (else_try),
+          (eq, ":object", "$obj2"),
+		  (neg|str_is_empty, s1),
+		  (neg|str_is_empty, s2),
+		  
+		  (party_set_name, "p_main_party", s1),
+		  (troop_set_name, "trp_player", s1),
+		  
+		  (call_script,"script_send_string_to_server",mpcamp_event_register,2,s1,s2),
+		  (call_script,"script_send_data"),
+		  
+		  
+          (presentation_set_duration, 0),
+		  (jump_to_menu, "mnu_wait_for_confirmation"),
+		(else_try),
+			(eq, ":object", "$obj3"),
+			(jump_to_menu, "mnu_start_game_0"),
+        (try_end),
+        ]),
+     ]),
+	 
+	 #######ESCAPE PRESENTATION#########
+	 ("game_escape ",prsntf_read_only,0,[
+		  (ti_on_presentation_load,
+		   [
+			(presentation_set_duration, 999999),
+		   ]),
+		 sync,
+		 (ti_on_presentation_run,
+           [
+		   (map_free),
+		   (presentation_set_duration, 0),
+			]),
+	 ]),
+	 
+	 #############LOG IN###############
+	 ("log_in",0,mesh_load_window,[
+      (ti_on_presentation_load,
+       [(set_fixed_point_multiplier, 1000),
+	   
+	   (str_store_string, s1, "@LOG IN"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 600),
+        (overlay_set_position, reg1, pos1),
+	   
+        (str_store_string, s1, "str_username"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 500),
+        (overlay_set_position, reg1, pos1),
+        #(overlay_set_text, reg1, s1),
+        (create_simple_text_box_overlay, "$username"),
+        (position_set_x, pos1, 400),
+        (position_set_y, pos1, 475),
+        (overlay_set_position, "$username", pos1),
+       
+	   ###pass
+	   (str_store_string, s1, "str_password"),
+        (create_text_overlay, reg1, s1, tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 400),
+        (overlay_set_position, reg1, pos1),
+        #(overlay_set_text, reg1, s1),
+        (create_simple_text_box_overlay, "$password"),
+        (position_set_x, pos1, 400),
+        (position_set_y, pos1, 375),
+        (overlay_set_position, "$password", pos1),  
+	   
+        
+        (create_button_overlay, "$obj2", "@Continue...", tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 250),
+        (overlay_set_position, "$obj2", pos1),
+		
+		 (create_button_overlay, "$obj3", "@Go back", tf_center_justify),
+        (position_set_x, pos1, 500),
+        (position_set_y, pos1, 200),
+        (overlay_set_position, "$obj3", pos1),
+        (presentation_set_duration, 999999),
+        ]),
+      (ti_on_presentation_event_state_change,
+       [(store_trigger_param_1, ":object"),
+        (try_begin),
+          (eq, ":object", "$username"),
+          (str_store_string, s1, s0),
+		 (else_try),
+			(eq,":object","$password"),
+			(str_store_string, s2, s0),
+        (else_try),
+          (eq, ":object", "$obj2"),
+		  (neg|str_is_empty, s1),
+		  (neg|str_is_empty, s2),
+		  
+		  (party_set_name, "p_main_party", s1),
+		  (troop_set_name, "trp_player", s1),
+		  
+		  (call_script,"script_send_string_to_server",mpcamp_event_log_in,2,s1,s2),
+		  (call_script,"script_send_data"),
+		  
+		  
+          (presentation_set_duration, 0),
+		  (jump_to_menu, "mnu_wait_for_confirmation"),
+		(else_try),
+			(eq, ":object", "$obj3"),
+			(jump_to_menu, "mnu_start_game_0"),
+        (try_end),
+        ]),
+     ]),
+	 
+	 ###############PLAYER STATS###############
+	 ("player_stats", prsntf_read_only|prsntf_manual_end_only, 0, [ 
+    (ti_on_presentation_load,
+     [
+	 
+	  
+	 (set_fixed_point_multiplier, 1000),
+
+      (create_mesh_overlay, reg0, "mesh_mp_score_a"),
+      (position_set_x, pos1, 295),
+      (position_set_y, pos1, 115),
+      (overlay_set_position, reg0, pos1),
+      (position_set_x, pos1, 1000),
+      (position_set_y, pos1, 1000),
+      (overlay_set_size, reg0, pos1),
+
+      (assign, ":total_rows", 13),
+
+      (str_clear, s0),
+      (create_text_overlay, "$g_players_stats_container", s0, tf_scrollable_style_2),
+      (position_set_x, pos1, 300),
+      (position_set_y, pos1, 140),
+      (overlay_set_position, "$g_players_stats_container", pos1),
+      (position_set_x, pos1, 346),
+      (position_set_y, pos1, 530),
+      (overlay_set_area_size, "$g_players_stats_container", pos1),
+      (set_container_overlay, "$g_players_stats_container"),
+
+      (store_mul, ":y_needed", ":total_rows", 20),
+      (val_add, ":y_needed", 80),
+
+
+
+      (assign, ":cur_y", ":y_needed"),
+      (assign, ":cur_x", 42),
+      
+      (create_text_overlay, reg0, "str_player_name", 0),
+      (overlay_set_color, reg0, 0xFFFFFF),
+      (position_set_x, pos1, ":cur_x"),
+      (position_set_y, pos1, ":cur_y"),
+      (overlay_set_position, reg0, pos1),
+      (position_set_x, pos1, 750),
+      (position_set_y, pos1, 750),
+      (overlay_set_size, reg0, pos1),
+      
+      (create_text_overlay, reg0, "str_ping", tf_center_justify),
+      (overlay_set_color, reg0, 0xFFFFFF),
+      (store_add, ":sub_cur_x", ":cur_x", 179), #264
+      (position_set_x, pos1, ":sub_cur_x"),
+      (position_set_y, pos1, ":cur_y"),
+      (overlay_set_position, reg0, pos1),
+      (position_set_x, pos1, 750),
+      (position_set_y, pos1, 750),
+      (overlay_set_size, reg0, pos1),
+      
+      (create_mesh_overlay, reg0, "mesh_white_plane"),
+      (overlay_set_color, reg0, 0xFFFFFF),
+      (overlay_set_alpha, reg0, 0xD0),
+      (store_add, ":sub_cur_x", ":cur_x", 0),
+      (position_set_x, pos1, ":sub_cur_x"),
+      (store_add, ":sub_cur_y", ":cur_y", -10),
+      (position_set_y, pos1, ":sub_cur_y"),
+      (overlay_set_position, reg0, pos1),
+      (position_set_x, pos1, 15250),
+      (position_set_y, pos1, 50),
+      (overlay_set_size, reg0, pos1),
+
+      (val_sub, ":cur_y", 35),
+      
+      (try_for_range, ":local_id", 0, 10),
+		  (store_add,":party_id",":local_id","p_multiplayer_1"),
+		  
+		  (party_is_active,":party_id"),
+		  
+		  (str_store_party_name,s1,":party_id"),
+          (create_text_overlay, reg0, s1, 0),
+          (overlay_set_color, reg0, 0xFFFFFF),
+          (position_set_x, pos1, 750),
+          (position_set_y, pos1, 750),
+          (overlay_set_size, reg0, pos1),
+          (position_set_x, pos1, ":cur_x"),
+          (position_set_y, pos1, ":cur_y"),
+          (overlay_set_position, reg0, pos1),
+      
+	  
+		  (party_get_slot,reg0,":party_id",slot_player_ping),
+          (create_text_overlay, reg0, "str_reg0", tf_right_align),
+          (overlay_set_color, reg0, 0xFFFFFF),
+          (position_set_x, pos1, 750),
+          (position_set_y, pos1, 750),
+          (overlay_set_size, reg0, pos1),
+          (store_add, ":sub_cur_x", ":cur_x", 179), #273
+          (position_set_x, pos1, ":sub_cur_x"),
+          (position_set_y, pos1, ":cur_y"),
+          (overlay_set_position, reg0, pos1),
+          (val_sub, ":cur_y", 20),
+      (try_end),
+
+      (assign, ":cur_x", 42),
+
+
+      (omit_key_once, key_mouse_scroll_up),
+      (omit_key_once, key_mouse_scroll_down),
+      
+      (presentation_set_duration, 999999),
+      ]),
+    (ti_on_presentation_run,
+     [(store_trigger_param_1, ":cur_time"),
+      (try_begin),
+        (neg|key_is_down, key_tab),
+        (clear_omitted_keys),
+        (presentation_set_duration, 0),
+      (try_end),
+      (try_begin),
+        (store_mul, ":update_period_time_limit", 1, 1000),
+        (gt, ":cur_time", ":update_period_time_limit"),
+        (clear_omitted_keys),
+        (presentation_set_duration, 0),
+        (start_presentation, "prsnt_player_stats"),
+      (try_end),
+      ]),
+	  sync,
+    ]),
+
+	
+	("sync",0,0,[#  (start_background_presentation, "prsnt_sync"), #DO NOT USE!!!!!!!
+		  (ti_on_presentation_load,
+		   [
+		   (display_message,"@sync started"),
+			(presentation_set_duration, 999999),
+			(assign,"$sync",1),
+		   ]),
+		 (ti_on_presentation_run,
+           [
+			(store_trigger_param_1,":cur_miliseconds"),
+			(store_sub,":sub",":cur_miliseconds","$timee"),
+			(try_begin),
+				(ge,":sub",300),#every 0.3 sec refresh
+				(call_script,"script_send_data"),
+				(assign,"$timee",":cur_miliseconds"),
+			(else_try),
+				(lt,":sub",0),
+				(assign,"$timee",0),
+			(try_end),
+			
+			(try_begin),
+				(map_free),
+				(presentation_set_duration, 0),
+			(else_try),
+				(eq,"$sync",0),
+				(presentation_set_duration, 0),
+			(else_try),
+				(key_clicked,key_escape),
+				(presentation_set_duration, 0),
+			(try_end),
+			]),
+	 ]),
+	 
+	 ##############INVENTORY############
+	 ("inventory",prsntf_read_only|prsntf_manual_end_only,mesh_white_bg_plane_a,[#  (start_background_presentation, "prsnt_sync"),
+		  (ti_on_presentation_load,
+		   [#370 , 40 - tableau material
+		   
+		   (assign,"$selected_item",0),
+		   
+			(set_fixed_point_multiplier, 1000),
+			(init_position,pos1),
+			(create_mesh_overlay, "$inv_mesh", "mesh_inventory_window"),
+			(position_set_x, pos1, 0),
+			(position_set_y, pos1, 0),
+			(overlay_set_position, "$inv_mesh", pos1),
+			
+			(create_image_button_overlay_with_tableau_material, "$material_var", -1, "tableau_game_inventory_window", "trp_player"),
+			(position_set_x, pos1, 370),
+			(position_set_y, pos1, 40),
+			(overlay_set_position, "$material_var", pos1),
+			
+			(position_set_x, pos1, 700),
+			(position_set_y, pos1, 1024),
+			(overlay_set_size, "$material_var", pos1),
+			
+			###equipament meshes begin
+			(call_script,"script_inventory_overlay",0,595,650),#mesh id 2
+			(call_script,"script_inventory_overlay",1,595,561),
+			(call_script,"script_inventory_overlay",2,595,473),
+			(call_script,"script_inventory_overlay",3,595,384),
+			(call_script,"script_inventory_overlay",4,494,650),
+			(call_script,"script_inventory_overlay",5,494,560),
+			(call_script,"script_inventory_overlay",6,494,473),
+			(call_script,"script_inventory_overlay",7,406,561),
+			(call_script,"script_inventory_overlay",8,406,360),#mesh id 10
+			###equipament meshes end
+			
+			
+			# (assign,":cur_x",514),
+			(assign,":cur_y",687),
+			
+			(try_for_range,":i",0,18),
+				(try_begin),
+					(store_mod,":result",":i",3),
+					(eq,":result",0),
+					
+					(val_sub,":cur_y",87),
+					(assign,":cur_x",601),
+				(try_end),
+				
+				(val_add,":cur_x",87),
+				
+				(create_image_button_overlay,":mesh_id", "mesh_inv_slot", "mesh_inv_slot"),
+				(position_set_x, pos1, ":cur_x"),
+				(position_set_y, pos1, ":cur_y"),
+				(overlay_set_position, ":mesh_id", pos1),
+				(position_set_x, pos1, 870),
+				(position_set_y, pos1, 870),
+				(overlay_set_size, ":mesh_id", pos1),
+			(try_end),
+			
+			
+			
+			(call_script,"script_inventory_overlay_item_id",0,595,650),
+			(call_script,"script_inventory_overlay_item_id",1,595,561),
+			(call_script,"script_inventory_overlay_item_id",2,595,473),
+			(call_script,"script_inventory_overlay_item_id",3,595,384),
+			(call_script,"script_inventory_overlay_item_id",4,494,650),
+			(call_script,"script_inventory_overlay_item_id",5,494,560),
+			(call_script,"script_inventory_overlay_item_id",6,494,473),
+			(call_script,"script_inventory_overlay_item_id",7,406,561),
+			(call_script,"script_inventory_overlay_item_id",8,406,360),
+			
+			
+			(assign,":cur_y",687),
+			
+			(try_for_range,":i",0,18),
+				
+				(store_add,":slot_to_use","$inventory_starting_item",":i"),
+				(troop_get_inventory_slot,":item","trp_player",":slot_to_use"),
+				(store_add,":mesh_id",":i",11),
+				
+				(try_begin),
+					(store_mod,":result",":i",3),
+					(eq,":result",0),
+					
+					(val_sub,":cur_y",87),
+					(assign,":cur_x",601),
+				(try_end),
+				
+				(val_add,":cur_x",87),
+				
+				(try_begin),
+					(neq,":item",-1),
+					(create_mesh_overlay_with_item_id, ":obj_id", ":item"),
+					(store_add,":item_pos_x",":cur_x",43.5),
+					(store_add,":item_pos_y",":cur_y",43.5),
+					(position_set_x, pos1, ":item_pos_x"),
+					(position_set_y, pos1, ":item_pos_y"),
+					(overlay_set_position, ":obj_id", pos1),
+					
+					(troop_set_slot,":mesh_id",slot_mesh_item_id,":item"),
+				(else_try),
+					(troop_set_slot,":mesh_id",slot_mesh_item_id,-1),
+				(try_end),
+			(try_end),
+			
+			
+			
+			#700,100
+			#850,100
+			(create_game_button_overlay, "$first_button", "@<"),
+			(position_set_x, pos1, 750),
+			(position_set_y, pos1, 100),
+			(overlay_set_position, "$first_button", pos1),
+			
+			
+			(create_game_button_overlay, "$second_button", "@>"),
+			(position_set_x, pos1, 900),
+			(position_set_y, pos1, 100),
+			(overlay_set_position, "$second_button", pos1),
+			
+			
+			#creating the name
+			(str_store_party_name,s1,"p_main_party"),
+			(create_text_overlay, ":name", s1),
+			(position_set_x, pos1, 800),
+			(position_set_y, pos1, 700),
+			(overlay_set_position, ":name", pos1),
+			
+			#creating gold display 740 40
+			
+			(create_mesh_overlay, ":mesh_id","mesh_gold_mesh"),
+			(position_set_x, pos1, 730),
+			(position_set_y, pos1, 45),
+			(overlay_set_position, ":mesh_id", pos1),
+			(position_set_x, pos1, 200),
+			(position_set_y, pos1, 200),
+			(overlay_set_size, ":mesh_id", pos1),
+			
+			(store_troop_gold,reg1,"trp_player"),
+			(create_text_overlay, ":gold", "str_reg1"),
+			(position_set_x, pos1, 760),
+			(position_set_y, pos1, 40),
+			(overlay_set_position, ":gold", pos1),
+			
+			
+		    (create_text_overlay, "$g_little_pos_helper", "@00,00"),
+			(overlay_set_color, "$g_little_pos_helper", 0xFF0000),
+			(position_set_x, pos1, 10),
+			(position_set_y, pos1, 700),
+			(overlay_set_position, "$g_little_pos_helper", pos1),
+			(presentation_set_duration, 999999),
+		   ]),
+		   
+		  (ti_on_presentation_mouse_enter_leave,
+			[
+			(store_trigger_param_1,":mesh_id"),
+			(store_trigger_param_2,":state"),
+			(try_begin),
+				(eq,":state",0),
+					(troop_get_slot,":item_id",":mesh_id",slot_mesh_item_id),
+					(try_begin),
+						(neq,":item_id",-1),
+						(is_between,":mesh_id",2,29),
+						
+						(mouse_get_position, pos1),
+						(show_item_details, ":item_id",pos1, 0),
+					(try_end),
+			(else_try),
+				(eq,":state",1),
+					(close_item_details),
+			(try_end),
+			]),			
+		   
+		   
+		   (ti_on_presentation_mouse_press,
+		   [
+			(store_trigger_param_1,":mesh_id"),
+			(store_trigger_param_2,":state"),
+			(try_begin),
+				(eq,":state",0),
+				(is_between,":mesh_id",2,29),
+				(try_begin),
+					(eq,"$selected_item",0),
+					(overlay_set_color, ":mesh_id", 0xFF0000),
+					(assign,"$selected_item",":mesh_id"),
+				(else_try),
+					(eq,"$selected_item",":mesh_id"),
+					(overlay_set_color, ":mesh_id", -1),
+					(assign,"$selected_item",0),
+					
+				(else_try),
+					(try_begin),
+						(try_begin),
+							(ge,":mesh_id",11),
+							(store_sub,":offset",":mesh_id",11),
+							(store_add,":first_item_slot",":offset","$inventory_starting_item"),
+						(else_try),
+							(store_sub,":first_item_slot",":mesh_id",2),
+						(try_end),
+						
+						(try_begin),
+							(ge,"$selected_item",11),
+							(store_sub,":offset","$selected_item",11),
+							(store_add,":second_item_slot",":offset","$inventory_starting_item"),
+						(else_try),
+							(store_sub,":second_item_slot","$selected_item",2),
+						(try_end),
+						
+						(troop_get_inventory_slot,":item_1","trp_player",":first_item_slot"),
+						(troop_get_inventory_slot,":item_2","trp_player",":second_item_slot"),
+						
+						(assign,":ok",1),
+						
+						(try_begin),	
+							(neq,":item_2",-1),
+							(try_begin),
+								(is_between,":mesh_id",2,6),#4
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_one_handed_wpn),
+										(neq,":itm_type",itp_type_two_handed_wpn),
+										(neq,":itm_type",itp_type_polearm),
+										(neq,":itm_type",itp_type_arrows),
+										(neq,":itm_type",itp_type_bolts),
+										(neq,":itm_type",itp_type_shield),
+										(neq,":itm_type",itp_type_bow),
+										(neq,":itm_type",itp_type_crossbow),
+										(neq,":itm_type",itp_type_thrown),
+										(neq,":itm_type",itp_type_pistol),
+										(neq,":itm_type",itp_type_musket),
+										(neq,":itm_type",itp_type_goods),
+										(neq,":itm_type",itp_type_book),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,":mesh_id",6),#head
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_head_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,":mesh_id",7),#body
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_body_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,":mesh_id",8),#foot
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_foot_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,":mesh_id",9),#gloves
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_hand_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,":mesh_id",10),#horse
+									(item_get_type, ":itm_type", ":item_2"),
+									(try_begin),
+										(neq,":itm_type",itp_type_horse),
+										(assign,":ok",0),
+									(try_end),
+							(try_end),
+						(try_end),
+						(try_begin),	
+							(neq,":item_1",-1),
+							(try_begin),
+								(is_between,"$selected_item",2,6),#4
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_one_handed_wpn),
+										(neq,":itm_type",itp_type_two_handed_wpn),
+										(neq,":itm_type",itp_type_polearm),
+										(neq,":itm_type",itp_type_arrows),
+										(neq,":itm_type",itp_type_bolts),
+										(neq,":itm_type",itp_type_shield),
+										(neq,":itm_type",itp_type_bow),
+										(neq,":itm_type",itp_type_crossbow),
+										(neq,":itm_type",itp_type_thrown),
+										(neq,":itm_type",itp_type_pistol),
+										(neq,":itm_type",itp_type_musket),
+										(neq,":itm_type",itp_type_goods),
+										(neq,":itm_type",itp_type_book),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,"$selected_item",6),#head
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_head_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,"$selected_item",7),#body
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_body_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,"$selected_item",8),#foot
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_foot_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,"$selected_item",9),#gloves
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_hand_armor),
+										(assign,":ok",0),
+									(try_end),
+							(else_try),
+								(eq,"$selected_item",10),#horse
+									(item_get_type, ":itm_type", ":item_1"),
+									(try_begin),
+										(neq,":itm_type",itp_type_horse),
+										(assign,":ok",0),
+									(try_end),
+							(try_end),
+						(try_end),
+						(eq,":ok",1),
+						
+						(troop_set_inventory_slot,"trp_player",":first_item_slot",":item_2"),
+						(troop_set_inventory_slot,"trp_player",":second_item_slot",":item_1"),
+						
+						(presentation_set_duration, 0),
+						(start_presentation, "prsnt_inventory"),
+					(try_end),
+				(try_end),
+				# (display_message,"@test"),
+			(else_try),
+				(eq,":state",1),
+					(assign,reg1,":mesh_id"),
+						(display_message,"@Mesh id:{reg1}"),
+			(try_end),
+			
+			(try_begin),
+				(eq,":state",0),
+				(eq,":mesh_id","$first_button"),
+					(gt,"$inventory_starting_item",10),
+					(val_sub,"$inventory_starting_item",18),
+					(presentation_set_duration, 0),
+					(start_presentation, "prsnt_inventory"),
+			(else_try),
+				(eq,":state",0),
+				(eq,":mesh_id","$second_button"),
+					(lt,"$inventory_starting_item",82),
+					(val_add,"$inventory_starting_item",18),
+					(presentation_set_duration, 0),
+					(start_presentation, "prsnt_inventory"),
+			(try_end),
+		   ]),
+		   
+		   
+		 (ti_on_presentation_run,
+           [
+			(set_fixed_point_multiplier, 1000),
+			(mouse_get_position, pos1),
+			(position_get_x, reg1, pos1),
+			(position_get_y, reg2, pos1),
+			(overlay_set_text, "$g_little_pos_helper", "@{reg1},{reg2}"),
+			(try_begin),
+				(map_free),
+				(presentation_set_duration, 0),
+			(else_try),
+				(key_clicked,key_escape),
+				(presentation_set_duration, 0),
+			(try_end),
+			]),
+			sync,
+	 ]),
+	 
+	 ############MENU#############
+	 ("action_menu",prsntf_manual_end_only,0,[
+		  (ti_on_presentation_load,
+		   [
+				(set_fixed_point_multiplier, 1000),
+				(init_position,pos1),
+				(create_mesh_overlay, ":tmp", "mesh_mp_score_a"),
+				(position_set_x, pos1, 295),
+				(position_set_y, pos1, 115),
+				(overlay_set_position, ":tmp", pos1),
+				(position_set_x, pos1, 1000),
+				(position_set_y, pos1, 1000),
+				(overlay_set_size, ":tmp", pos1),
+				
+				(create_button_overlay, "$inventory_button", "@Inventory", 0),
+				(overlay_set_color, "$inventory_button", 0xFFFFFF),
+				(position_set_x, pos1, 364),
+				(position_set_y, pos1, 625),
+				(overlay_set_position, "$inventory_button", pos1),
+				
+				(create_button_overlay, "$party_button", "@Party manager (W.I.P.)", 0),
+				(overlay_set_color, "$party_button", 0xFFFFFF),
+				(position_set_x, pos1, 364),
+				(position_set_y, pos1, 575),
+				(overlay_set_position, "$party_button", pos1),
+				
+				(create_button_overlay, "$ability_button", "@Abilities (W.I.P.)", 0),
+				(overlay_set_color, "$ability_button", 0xFFFFFF),
+				(position_set_x, pos1, 364),
+				(position_set_y, pos1, 525),
+				(overlay_set_position, "$ability_button", pos1),
+				
+				# (create_button_overlay, "$inventory_button", "@", 0),
+				# (overlay_set_color, "$inventory_button", 0xFFFFFF),
+				# (position_set_x, pos1, 364),
+				# (position_set_y, pos1, 625),
+				# (overlay_set_position, "$inventory_button", pos1),
+		   
+		   (create_text_overlay, "$g_little_pos_helper", "@00,00"),
+			(overlay_set_color, "$g_little_pos_helper", 0xFF0000),
+			(position_set_x, pos1, 295),
+			(position_set_y, pos1, 115),
+			(overlay_set_position, "$g_little_pos_helper", pos1),
+		   
+			(presentation_set_duration, 999999),
+		   ]),
+		(ti_on_presentation_event_state_change,
+		[	(store_trigger_param_1, ":object"),
+			(try_begin),
+				(eq,":object", "$inventory_button"),
+				(presentation_set_duration, 0),
+				(assign,"$inventory_starting_item",10),
+				(assign,"$selected_item",0),
+				(start_presentation, "prsnt_inventory"),
+			# (else_try),
+				# (eq,":object", "$party_button"),
+				# (presentation_set_duration, 0),
+				# (start_presentation, "prsnt_party"),
+			(try_end),
+		]),
+		 (ti_on_presentation_run,
+           [
+		   
+		   (set_fixed_point_multiplier, 1000),
+			(mouse_get_position, pos1),
+			(position_get_x, reg1, pos1),
+			(position_get_y, reg2, pos1),
+			(overlay_set_text, "$g_little_pos_helper", "@{reg1},{reg2}"),
+		   
+		   (try_begin),
+				(map_free),
+				(presentation_set_duration, 0),
+			(else_try),
+				(this_or_next|key_clicked,key_escape),
+				(key_clicked,key_m),
+				(presentation_set_duration, 0),
+			(try_end),
+			]),
+		 sync,
+	 ]),
+	 
+	 
+	 ("party",prsntf_read_only|prsntf_manual_end_only,mesh_white_bg_plane_a,[
+		(ti_on_presentation_load,
+		   [
+			(set_fixed_point_multiplier, 1000),
+			
+			(str_store_troop_name,s1,"trp_player"),
+			
+			(init_position,pos1),
+			(create_mesh_overlay, "$party_mesh", "mesh_party_window"),
+			(position_set_x, pos1, 0),
+			(position_set_y, pos1, 0),
+			(overlay_set_position, "$party_mesh", pos1),
+			
+			
+			(create_text_overlay, "$g_little_pos_helper", "@00,00"),
+			(overlay_set_color, "$g_little_pos_helper", 0xFF0000),
+			(position_set_x, pos1, 295),
+			(position_set_y, pos1, 115),
+			(overlay_set_position, "$g_little_pos_helper", pos1),
+			
+			(create_combo_button_overlay, ":button"),
+			(position_set_x, pos1, 815),
+			(position_set_y, pos1, 655),
+			(overlay_set_position, ":button", pos1),
+			
+			(store_troop_health,reg1,"trp_player"),
+			(create_text_overlay, ":val1", "@{s1}({reg1}%)"),
+			(position_set_x, pos1, 745),
+			(position_set_y, pos1, 663),
+			(overlay_set_position, ":val1", pos1),
+			
+			
+			(presentation_set_duration, 999999),
+			]),
+			
+		(ti_on_presentation_run,
+           [
+		   
+		   (set_fixed_point_multiplier, 1000),
+			(mouse_get_position, pos1),
+			(position_get_x, reg1, pos1),
+			(position_get_y, reg2, pos1),
+			(overlay_set_text, "$g_little_pos_helper", "@{reg1},{reg2}"),
+		   
+		   (try_begin),
+				(map_free),
+				(presentation_set_duration, 0),
+			(else_try),
+				(this_or_next|key_clicked,key_escape),
+				(key_clicked,key_m),
+				(presentation_set_duration, 0),
+			(try_end),
+			]),
+		 sync,
+		]),
+
     #INVASION MODE START
 	("multiplayer_flag_projection_display_ccoop", prsntf_read_only|prsntf_manual_end_only, 0, [
       (ti_on_presentation_load, 
       [
         (set_fixed_point_multiplier, 1000),
-      
         (create_mesh_overlay, "$g_presentation_obj_flag_projection_display_1", "mesh_prison_cart_pos"),
-        
         (position_set_x, pos1, 69),
         (position_set_y, pos1, 92),
         (overlay_set_size, "$g_presentation_obj_flag_projection_display_1", pos1),
         (overlay_set_display, "$g_presentation_obj_flag_projection_display_1", 0),
         (presentation_set_duration, 999999),
         ]),
-        
+
       (ti_on_presentation_run,
       [
 	    (try_begin),
@@ -13124,8 +14178,7 @@ presentations = [
       
         ]),
       ]),
-	  
-	  
+
 	# MCA  display flag over wave spawn points
 	("multiplayer_flag_projection_display_ccoop_wave", prsntf_read_only|prsntf_manual_end_only, 0, 
 	[
@@ -13270,6 +14323,7 @@ presentations = [
       (position_set_y, pos1, 374),
       (overlay_set_size, reg0, pos1),
 
+
       (create_mesh_overlay_with_item_id, reg0, ":item_id"),
       (position_set_x, pos1, 500),
       (position_set_y, pos1, 450),
@@ -13304,6 +14358,8 @@ presentations = [
       (overlay_set_area_size, "$g_presentation_obj_assign_drop_container", pos1),
       (set_container_overlay, "$g_presentation_obj_assign_drop_container"),
 
+
+
       (create_text_overlay, reg0, "str_ccoop_assign_drop", 0),
       (overlay_set_color, reg0, 0xFFFFFF),
       (position_set_x, pos1, 0),
@@ -13316,10 +14372,12 @@ presentations = [
       
       (str_store_item_name_plural, s0, ":item_id"),
 
+
       (val_sub, ":cur_y", 3),
       
       (create_text_overlay, reg0, s0, tf_center_justify),
       (overlay_set_color, reg0, 0xFFFFFF),
+
       (position_set_x, pos1, 500),
       (position_set_y, pos1, ":cur_y"),
       (overlay_set_position, reg0, pos1),
@@ -13337,14 +14395,14 @@ presentations = [
       
       (create_text_overlay, reg0, s0, tf_center_justify),
       (overlay_set_color, reg0, 0xFFFFFF),
+
       (position_set_x, pos1, 750),
       (position_set_y, pos1, 750),
       (overlay_set_size, reg0, pos1),
       (position_set_x, pos1, 500),
+
       (position_set_y, pos1, ":cur_y"),
       (overlay_set_position, reg0, pos1),
-      
-      
       (multiplayer_get_my_player, ":player_id"),
       (str_store_player_username, s0, ":player_id"),
       
@@ -13402,6 +14460,8 @@ presentations = [
         (create_image_button_overlay_with_tableau_material, "$g_presentation_obj_coop_assign_drop_companion_2", -1, "tableau_coop_companion_select_0", ":troop_id"),
         (overlay_set_tooltip, "$g_presentation_obj_coop_assign_drop_companion_2", s0),
 
+
+
         (position_set_x, pos1, ":cur_x"),
         (position_set_y, pos1, ":cur_y"),
         (overlay_set_position, "$g_presentation_obj_coop_assign_drop_companion_2", pos1),
@@ -13449,6 +14509,8 @@ presentations = [
      [(store_trigger_param_1, ":cur_time"),
       (close_item_details),
       (try_begin),
+
+
         (this_or_next|key_clicked, key_escape),
 	    (key_clicked, key_xbox_start),
         (gt, ":cur_time", 200),
@@ -13582,6 +14644,7 @@ presentations = [
       (try_end),
       
       (try_begin),
+
         (ge, "$g_multiplayer_ccoop_difficulty_string_i", 0),
         (str_store_string, s1, "$g_multiplayer_ccoop_difficulty_string_i"),
         (str_store_string, s2, "str_ccoop_s0_enemy_defeated_s1"),
@@ -13610,6 +14673,7 @@ presentations = [
       
       (presentation_set_duration, 2000),
       ]),
+
   
     (ti_on_presentation_run, [
       (is_presentation_active, "prsnt_multiplayer_ccoop_next_wave_time_counter"),      
@@ -13617,5 +14681,4 @@ presentations = [
       ]),
     ]),
     #INVASION MODE END
-
   ]

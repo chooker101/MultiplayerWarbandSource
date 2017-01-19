@@ -3397,5 +3397,9 @@ str_npc13_1 = 3395
 str_npc14_1 = 3396
 str_npc15_1 = 3397
 str_npc16_1 = 3398
+str_s1 = 3399
+str_username = 3400
+str_password = 3401
+str_ip = 3402
 
 

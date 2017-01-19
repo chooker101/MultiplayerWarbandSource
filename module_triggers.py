@@ -1521,7 +1521,114 @@ triggers = [
     ],
    []
    ),
+   
+   (0,0,0,[(key_clicked,key_m)],
+	[
+	(start_presentation, "prsnt_action_menu"),
+	]),
+	
+	(0,0,0,[(key_clicked,key_n)],
+	[
+	(assign,"$g_fps",1),
+	]),
+	
+	(0,0,0,[(key_clicked,key_tab)],
+	[
+	(start_presentation, "prsnt_player_stats"),
+	]),
+   (0.25,0,0,[(eq,"$g_fps",1),],[
+	(try_begin),
+		(neq,"$g_fps_start",1),
+		(assign,"$g_fps_start",1),
+		(assign,"$g_fps_counter",0),
+	(else_try),
+		(assign,"$g_fps_start",0),
+		(assign,"$g_fps",0),
+		(val_sub,"$g_fps_counter",2),#this is discovered experimentally
+		(assign,reg1,"$g_fps_counter"),
+		(display_message,"@FPS: {reg1}"),
+	(try_end),
+]),
 
+(0,0,0,[(eq,"$g_fps_start",1),],[
+	(val_add,"$g_fps_counter",1),
+]),
+
+(1,0,0,[],[#refresh the ping every 4 seconds
+	(call_script,"script_send_int_to_server",mpcamp_event_ping,1,0),
+]),
+
+(3,0,0,[],[#refresh the inventory every 12 seconds
+	(call_script,"script_send_int_to_server",mpcamp_event_get_inventory,0),
+	(call_script,"script_send_int_to_server",mpcamp_event_get_gold,0),
+]),
+
+###no Pause mod ####
+(0,0,0,[
+	(neg|key_is_down,key_space),
+	(eq,"$g_can_rest",1),
+	],[
+			(set_fixed_point_multiplier, 1000),
+			(party_get_position,pos1,"p_main_party"),
+			(position_get_x,":x",pos1),
+			(position_get_y,":y",pos1),
+			(try_begin),
+				(eq,":x","$g_x"),
+				(eq,":y","$g_y"),
+				(assign,"$g_paused",1),
+			(else_try),
+				(assign,"$g_paused",0),
+				(assign,"$g_x",":x"),
+				(assign,"$g_y",":y"),
+			(try_end),
+			(try_begin),
+				(eq,"$g_paused",1),
+					(assign, "$g_player_icon_state", pis_normal),
+					(rest_for_hours_interactive,999999,1,1),
+			(try_end),
+		
+	
+]),
+	
+(0,0,0,[
+	(this_or_next|key_clicked,key_left_mouse_button),
+	(key_clicked,key_space),
+	],
+	[
+		(assign,"$g_can_rest",0),
+		(rest_for_hours,0,0,0),
+]),
+	
+	
+(no_pause_mod_sensibility,0,0,[
+	(eq,"$g_can_rest",0)],
+	[
+	(assign,"$g_can_rest",1),
+]),
+####no pause mod end###
+
+(0.1,0,0,[],[ #sendind my position
+	(set_fixed_point_multiplier, 1000),
+	(party_get_position,pos1,"p_main_party"),
+	(position_get_rotation_around_z,":rot",pos1),
+	(position_get_x,":x",pos1),
+	(position_get_y,":y",pos1),
+	(call_script,"script_send_int_to_server",mpcamp_event_send_my_pos,3,":x",":y",":rot"),
+]),
+
+(0.2,0,0,[],[
+	(call_script,"script_send_int_to_server",mpcamp_event_get_pos,0),
+]),
+
+
+(0,0,0,[],[
+	(game_key_clicked,gk_mp_message_all),
+	(start_presentation, "prsnt_chat_message"),
+]),
+
+(sending_receiving_frequency,0,0,[],[
+	(call_script,"script_send_data"),
+]),
 
 
 

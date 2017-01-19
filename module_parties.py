@@ -72,6 +72,20 @@ parties = [
 #  ("village_reinforcements","village_reinforcements",pf_is_static|pf_disabled, no_menu, pt_none, fac_neutral,0,ai_bhvr_hold,0,(1,1),[]),
 
 ###############################################################  
+	#######mpcamp parties##########
+  ("multiplayer_parties_begin","nothing_here",pf_disabled, no_menu, pt_none, fac_commoners,0,ai_bhvr_hold,0,(0,0),[]),
+  ("multiplayer_1","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_2","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_3","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_4","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_5","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_6","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_7","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_8","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_9","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  ("multiplayer_10","mp",icon_player|pf_limit_members, no_menu, pt_none,fac_neutral,0,ai_bhvr_hold,0,(17, 52.5),[(trp_player_m,1,0)]),
+  
+
   ("zendar","Zendar",pf_disabled|icon_town|pf_is_static|pf_always_visible|pf_hide_defenders, no_menu, pt_none, fac_neutral,0,ai_bhvr_hold,0,(18,60),[]),
 
   ("town_1","Sargoth",  icon_town|pf_town, no_menu, pt_none, fac_neutral,0,ai_bhvr_hold,0,(-17.6, 79.7),[], 170),
