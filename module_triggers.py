@@ -1536,6 +1536,7 @@ triggers = [
 	[
 	(start_presentation, "prsnt_player_stats"),
 	]),
+	
    (0.25,0,0,[(eq,"$g_fps",1),],[
 	(try_begin),
 		(neq,"$g_fps_start",1),
