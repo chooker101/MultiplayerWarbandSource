@@ -597,9 +597,18 @@ meshes = [
   ("mp_ui_host_maps_18", 0, "mp_ui_host_maps_d3", 0, 0, 0, 0, 0, 0, 1, 1, 1),
   ("mp_ui_host_maps_19", 0, "mp_ui_host_maps_e2", 0, 0, 0, 0, 0, 0, 1, 1, 1),
   ("mp_ui_host_maps_20", 0, "mp_ui_host_maps_e1", 0, 0, 0, 0, 0, 0, 1, 1, 1),
-  
-  #multicamp begin
-  ("inventory_window", 0, "inventory_window_b", 0, 0, 0, 0, 0, 0, 1, 1, 1),
-  ("party_window", 0, "party_window_b", 0, 0, 0, 0, 0, 0, 1, 1, 1),
-  ("gold_mesh", 0, "mp_ico_gold", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("mp_ui_host_maps_21", 0, "mp_ui_host_maps_cold_cost", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+
+#INVASION MODE START  
+  ("incoming_enemy", 0, "cb_ui_icon_infantry", 0, 0, 0, 0, 0, 0, 2, 2, 2),
+  ("prison_cart_pos", 0, "ccoop_prison_cart", 0, 0, 0, 0, 0, 0, 2, 2, 2),
+
+  ("ccoop_drop_chest_top", 0, "ccoop_drop_chest_top", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("ccoop_drop_chest_bottom", 0, "ccoop_drop_chest_bottom", 0, 0, 200, 0, 0, 0, 1, 1, 1),
+  ("ccoop_random_class", 0, "ccoop_random_class", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("ccoop_default_class", 0, "ccoop_default_class", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("ccoop_melee_class", 0, "ccoop_melee_class", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("ccoop_ranged_class", 0, "ccoop_ranged_class", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+  ("ccoop_mounted_class", 0, "ccoop_mounted_class", 0, 0, 0, 0, 0, 0, 1, 1, 1),
+#INVASION MODE END
 ]

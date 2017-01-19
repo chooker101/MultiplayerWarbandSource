@@ -37,41 +37,14 @@ from module_constants import *
 
 game_menus = [
   ("start_game_0",menu_text_color(0xFF000000)|mnf_disable_all_keys,
-    "Select register to register a new account. Select Log In only when you lost your savegame!!!",
+    "Welcome, adventurer, to Mount and Blade: Warband. Before beginning the game you must create your character. Remember that in the traditional medieval society depicted in the game, war and politics are usually dominated by male members of the nobility. That does not however mean that you should not choose to play a female character, or one who is not of noble birth. Male nobles may have a somewhat easier start, but women and commoners can attain all of the same goals -- and in fact may have a much more interesting if more challenging early game.",
     "none",
     [],
     [
-     ("Register",[],"Register account",
-       [
-	    (troop_set_type,"trp_player", 0),
-        (assign,"$character_gender",tf_male),
-		(start_presentation,"prsnt_register"),
-		(troop_add_item, "trp_player","itm_linen_tunic",imod_sturdy),
-        (troop_add_item, "trp_player","itm_woolen_hose",0),
-        (troop_add_item, "trp_player","itm_sword_medieval_a", imod_rusty),
-        (troop_add_item, "trp_player","itm_hunting_crossbow", 0),
-        (troop_add_item, "trp_player","itm_bolts", 0),
-        (troop_add_item, "trp_player","itm_saddle_horse",imod_swaybacked),
-        (troop_add_item, "trp_player","itm_smoked_fish",0),
+     ("continue",[],"Continue...",
+       [(jump_to_menu, "mnu_start_game_1"),
         ]
        ),
-	  
-	 ("Log_In",[],"Log In(forced, somehow deprecated)",
-       [
-	    (troop_set_type,"trp_player", 0),
-		(assign,"$log_in_forced",1),
-        (assign,"$character_gender",tf_male),
-		(start_presentation, "prsnt_log_in"),
-		(troop_add_item, "trp_player","itm_linen_tunic",imod_sturdy),
-        (troop_add_item, "trp_player","itm_woolen_hose",0),
-        (troop_add_item, "trp_player","itm_sword_medieval_a", imod_rusty),
-        (troop_add_item, "trp_player","itm_hunting_crossbow", 0),
-        (troop_add_item, "trp_player","itm_bolts", 0),
-        (troop_add_item, "trp_player","itm_saddle_horse",imod_swaybacked),
-        (troop_add_item, "trp_player","itm_smoked_fish",0),
-        ]
-       ),
-	  
       ("go_back",[],"Go back",
        [
          (change_screen_quit),
@@ -953,21 +926,28 @@ game_menus = [
   ),
   
   ("start_game_1",menu_text_color(0xFF000000)|mnf_disable_all_keys,
-    "Blah Blah Blah text that does not need to be read",
+    "Select your character's gender.",
     "none",
+    [],
     [
-		(troop_set_type,"trp_player", 0),
-        (assign,"$character_gender",tf_male),
-		(start_presentation,"prsnt_register"),
-		(troop_add_item, "trp_player","itm_linen_tunic",imod_sturdy),
-        (troop_add_item, "trp_player","itm_woolen_hose",0),
-        (troop_add_item, "trp_player","itm_sword_medieval_a", imod_rusty),
-        (troop_add_item, "trp_player","itm_hunting_crossbow", 0),
-        (troop_add_item, "trp_player","itm_bolts", 0),
-        (troop_add_item, "trp_player","itm_saddle_horse",imod_swaybacked),
-        (troop_add_item, "trp_player","itm_smoked_fish",0),
-	],
-    [
+      ("start_male",[],"Male",
+       [
+         (troop_set_type,"trp_player", 0),
+         (assign,"$character_gender",tf_male),
+         (jump_to_menu,"mnu_start_character_1"),
+        ]
+       ),
+      ("start_female",[],"Female",
+       [
+         (troop_set_type, "trp_player", 1),
+         (assign, "$character_gender", tf_female),
+         (jump_to_menu, "mnu_start_character_1"),
+       ]
+       ),
+	  ("go_back",[],"Go back",
+       [
+	     (jump_to_menu,"mnu_start_game_0"),
+       ]),
     ]
   ),
 
@@ -14300,9 +14280,14 @@ game_menus = [
     "{!}{s16}",
     "none",
     [
-	  (change_screen_map),
+      (str_store_party_name, s1, "$g_starting_town"),
+      (str_store_string, s16, "$g_journey_string"),
     ],
     [
+      ("continue",[], "Continue...",
+       [
+		 (jump_to_menu, "mnu_start_phase_3"),
+       ]),
     ]
   ),
 
@@ -14344,10 +14329,8 @@ game_menus = [
          (assign, "$g_starting_town", "$current_town"),
          (call_script, "script_player_arrived"),
          (party_set_morale, "p_main_party", 100),
-         # (set_encountered_party, "$current_town"),
-		 (change_screen_map),
-         #(call_script, "script_prepare_alley_to_fight"),
-		 
+         (set_encountered_party, "$current_town"),
+         (call_script, "script_prepare_alley_to_fight"),
        ]),
     ]
   ),
@@ -14523,18 +14506,7 @@ game_menus = [
   ),
 
   
-  ############# MULTI CAMP GAME MENUES ###############
-  ("wait_for_confirmation",menu_text_color(0xFF000000)|mnf_disable_all_keys,
-    "Wait for the confirmation...^If after 10 seconds there is no response, press 'Go back'",
-    "none",
-    [],
-    [
-      ("go_back",[],"Go back",
-       [
-         (change_screen_quit),
-       ]),
-    ]
-  ),
+  
 
   
  ]
