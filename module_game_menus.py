@@ -42,7 +42,8 @@ game_menus = [
     [],
     [
      ("continue",[],"Continue...",
-       [(start_presentation,"prsnt_register"),
+       [
+	   (start_presentation,"prsnt_register"),
 	   (jump_to_menu, "mnu_start_game_1"),
         ]
        ),
@@ -54,141 +55,13 @@ game_menus = [
   ),
 
   ("start_phase_2",mnf_disable_all_keys,
-    "You hear about Calradia, a land torn between rival kingdoms battling each other for supremacy,\
- a haven for knights and mercenaries,  cutthroats and adventurers, all willing to risk their lives in pursuit of fortune, power, or glory...\
- In this land which holds great dangers and even greater opportunities, you believe you may leave your past behind and start a new life.\
- You feel that finally, you hold the key of your destiny in your hands, free to choose as you will,\
- and that whatever course you take, great adventures will await you. Drawn by the stories you hear about Calradia and its kingdoms, you...",
+    "Start your adventure",
     "none",
     [],
     [
-      ("town_1",[(eq, "$current_startup_quest_phase", 0),],"join a caravan to Praven, in the Kingdom of Swadia.",
-       [
-         (assign, "$current_town", "p_town_6"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_praven"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-       
-      ("town_2",[(eq, "$current_startup_quest_phase", 0),],"join a caravan to Reyvadin, in the Kingdom of the Vaegirs.",
-       [
-         (assign, "$current_town", "p_town_8"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_reyvadin"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-       
-      ("town_3",[(eq, "$current_startup_quest_phase", 0),],"join a caravan to Tulga, in the Khergit Khanate.",
-       [
-         (assign, "$current_town", "p_town_10"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_tulga"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-       
-      ("town_4",[(eq, "$current_startup_quest_phase", 0),],"take a ship to Sargoth, in the Kingdom of the Nords.",
-       [
-         (assign, "$current_town", "p_town_1"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_sargoth"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-       
-      ("town_5",[(eq, "$current_startup_quest_phase", 0),],"take a ship to Jelkala, in the Kingdom of the Rhodoks.",
-       [
-         (assign, "$current_town", "p_town_5"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_jelkala"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-       
-      ("town_6",[(eq, "$current_startup_quest_phase", 0),],"join a caravan to Shariz, in the Sarranid Sultanate.",
-       [
-         (assign, "$current_town", "p_town_19"),
-         (assign, "$g_starting_town", "$current_town"),
-         (assign, "$g_journey_string", "str_journey_to_shariz"),
-		 (jump_to_menu, "mnu_start_phase_2_5"),
-#         (party_relocate_near_party, "p_main_party", "$g_starting_town", 2),
-#         (change_screen_return),
-       ]),
-
-	   
-      ("tutorial_cheat",[(eq,1,0)],"{!}CHEAT!",
-       [
-         (change_screen_return),
-         (assign, "$cheat_mode", 1),
-         (set_show_messages, 0),
-		 (add_xp_to_troop, 15000, "trp_player"),
-         (troop_raise_skill, "trp_player", skl_leadership, 7),
-         (troop_raise_skill, "trp_player", skl_prisoner_management, 5),
-         (troop_raise_skill, "trp_player", skl_inventory_management, 10),
-         (party_add_members, "p_main_party", "trp_swadian_knight", 10),
-         (party_add_members, "p_main_party", "trp_vaegir_knight", 10),
-         (party_add_members, "p_main_party", "trp_vaegir_archer", 10),
-         (party_add_members, "p_main_party", "trp_swadian_sharpshooter", 10),
-         (troop_add_item, "trp_player","itm_scale_armor",0),
-         (troop_add_item, "trp_player","itm_full_helm",0),
-         
-         (troop_add_item, "trp_player","itm_hafted_blade_b",0),
-         (troop_add_item, "trp_player","itm_hafted_blade_a",0),
-         (troop_add_item, "trp_player","itm_morningstar",0),
-         (troop_add_item, "trp_player","itm_tutorial_spear",0),
-         (troop_add_item, "trp_player","itm_tutorial_staff",0),
-         (troop_add_item, "trp_player","itm_tutorial_staff_no_attack",0),
-         (troop_add_item, "trp_player","itm_arena_lance",0),
-         (troop_add_item, "trp_player","itm_practice_staff",0),
-         (troop_add_item, "trp_player","itm_practice_lance",0),
-         (troop_add_item, "trp_player","itm_practice_javelin",0),
-         (troop_add_item, "trp_player","itm_scythe",0),
-         (troop_add_item, "trp_player","itm_pitch_fork",0),
-         (troop_add_item, "trp_player","itm_military_fork",0),
-         (troop_add_item, "trp_player","itm_battle_fork",0),
-         (troop_add_item, "trp_player","itm_boar_spear",0),
-         (troop_add_item, "trp_player","itm_jousting_lance",0),
-         (troop_add_item, "trp_player","itm_double_sided_lance",0),
-         (troop_add_item, "trp_player","itm_glaive",0),
-         (troop_add_item, "trp_player","itm_poleaxe",0),
-         (troop_add_item, "trp_player","itm_polehammer",0),
-         (troop_add_item, "trp_player","itm_staff",0),
-         (troop_add_item, "trp_player","itm_quarter_staff",0),
-         (troop_add_item, "trp_player","itm_iron_staff",0),
-         (troop_add_item, "trp_player","itm_shortened_spear",0),
-         (troop_add_item, "trp_player","itm_spear",0),
-         (troop_add_item, "trp_player","itm_war_spear",0),
-         (troop_add_item, "trp_player","itm_military_scythe",0),
-         (troop_add_item, "trp_player","itm_light_lance",0),
-         (troop_add_item, "trp_player","itm_lance",0),
-         (troop_add_item, "trp_player","itm_heavy_lance",0),
-         (troop_add_item, "trp_player","itm_great_lance",0),
-         (troop_add_item, "trp_player","itm_pike",0),
-         (troop_add_item, "trp_player","itm_ashwood_pike",0),
-         (troop_add_item, "trp_player","itm_awlpike",0),
-         (troop_add_item, "trp_player","itm_throwing_spears",0),
-         (troop_add_item, "trp_player","itm_javelin",0),
-         (troop_add_item, "trp_player","itm_jarid",0),
-         
-         (troop_add_item, "trp_player","itm_long_axe_b",0),		 
-         
-         (set_show_messages, 1),
-
-         (try_for_range, ":cur_place", scenes_begin, scenes_end),
-           (scene_set_slot, ":cur_place", slot_scene_visited, 1),
-         (try_end),
-         
-         (call_script, "script_get_player_party_morale_values"),
-         (party_set_morale, "p_main_party", reg0),
-       ]
-	   ),
+      ("continue", [], "Continue...",
+       [(change_screen_map),
+        ]),
     ]
   ),
  
