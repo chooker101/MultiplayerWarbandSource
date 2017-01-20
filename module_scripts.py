@@ -50867,7 +50867,6 @@ scripts = [
 		(str_clear, s1),
 		(str_store_string,s1,"str_ip"),
 		
-		
 		(assign,":end_data",11),
 		(try_for_range,":data_slot",1,":end_data"),
 			(troop_get_slot,":number_of_args",":data_slot",slot_nr_arg),
