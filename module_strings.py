@@ -4343,5 +4343,5 @@ We apologize sincerely if you contributed your suggestions and feedback but were
   ("s1","{s1}"),
   ("username","Username:"),
   ("password","Password:"),
-  ("ip","http://127.0.0.1/multiplayer.php?"),
+  ("ip","http://localhost:8080"),
 ]

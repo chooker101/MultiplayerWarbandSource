@@ -50779,6 +50779,7 @@ scripts = [
     (cur_tableau_add_sun_light, pos8, 175,150,125),
     ]),
    #INVASION MODE END
+   
    ("send_int_to_server",
    [
     (store_script_param,":event",1),
@@ -51025,7 +51026,6 @@ scripts = [
 				(party_set_name, ":party_id", "@Offline"),
 			(try_end),
 	(else_try),
-	
 		(eq,":event",mpcamp_event_init_players),
 		(assign,":c",1),
 		(assign,":str",0),
@@ -51066,11 +51066,8 @@ scripts = [
 				(else_try),
 					(disable_party,":party_id"),
 				(try_end),
-				
-				
 			(try_end),
 	(else_try),
-	
 		(eq,":event",mpcamp_event_get_pos),
 			(troop_get_slot,":nr_players",1,":args"),
 			(val_add,":nr_players",1),
